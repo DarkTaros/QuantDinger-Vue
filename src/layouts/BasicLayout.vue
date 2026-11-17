@@ -586,6 +586,7 @@ export default {
         '/ai-asset-analysis',
         '/indicator-community',
         '/indicator-ide',
+        '/crypto-market',
         '/strategy-ide',
         '/backtest-center',
         '/strategy-center',
@@ -629,6 +630,14 @@ export default {
           title: this.$t('menu.dashboard.community') || 'Marketplace',
           icon: 'shop',
           paths: ['/indicator-community'],
+          singleAsItem: true
+        },
+        {
+          name: 'MenuGroupCryptoMarket',
+          path: '/menu-group/crypto-market',
+          title: this.$t('cryptoMarket.title') || 'Crypto Markets',
+          icon: 'line-chart',
+          paths: ['/crypto-market'],
           singleAsItem: true
         },
         {
@@ -999,9 +1008,6 @@ export default {
 
 }
 
-.ant-pro-sider-menu-sider.light .ant-menu-light {
-  height: 60vh!important;
-}
 .basic-layout-wrapper {
   .ant-layout-footer {
     display: none !important;

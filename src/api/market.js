@@ -6,6 +6,7 @@ const marketApi = {
   AddWatchlist: '/api/market/watchlist/add',
   RemoveWatchlist: '/api/market/watchlist/remove',
   GetWatchlistPrices: '/api/market/watchlist/prices',
+  GetPrice: '/api/market/price',
   // AI chat (optional)
   ChatMessage: '/api/ai/chat/message',
   ExportChatReportPdf: '/api/ai/chat/report/pdf',
@@ -64,6 +65,14 @@ export function getWatchlistPrices () {
   return request({
     url: marketApi.GetWatchlistPrices,
     method: 'get'
+  })
+}
+
+export function getMarketPrice (parameter) {
+  return request({
+    url: marketApi.GetPrice,
+    method: 'get',
+    params: parameter
   })
 }
 

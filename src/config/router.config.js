@@ -43,6 +43,18 @@ export const asyncRouterMap = [
         meta: { title: 'menu.dashboard.strategyIde', keepAlive: true, icon: 'code', permission: ['dashboard'] }
       },
       {
+        path: '/arbitrage',
+        name: 'Arbitrage',
+        component: () => import('@/views/arbitrage'),
+        meta: { title: 'arbitrage.title', keepAlive: false, icon: 'swap', permission: ['dashboard'], capability: 'arbitrage_enabled' }
+      },
+      {
+        path: '/crypto-market',
+        name: 'CryptoMarket',
+        component: () => import('@/views/crypto-market'),
+        meta: { title: 'cryptoMarket.title', keepAlive: false, icon: 'line-chart', permission: ['dashboard'] }
+      },
+      {
         path: '/backtest-center',
         name: 'BacktestCenter',
         component: () => import('@/views/backtest-center'),

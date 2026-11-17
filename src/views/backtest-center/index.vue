@@ -671,6 +671,22 @@ function storedFactorResearchMode () {
   return ['single', 'benchmark'].includes(value) ? value : 'single'
 }
 
+// The request helper normally unwraps the Axios response, but deployments
+// using a reverse proxy can return one additional `{ data: ... }` envelope.
+// Normalize both shapes so a completed job is never mistaken for an empty
+// progress snapshot and left on the initial "preparing" screen.
+function normalizeBacktestJobPayload (response) {
+  let payload = response || {}
+  if (payload && payload.data && payload.data.code !== undefined && payload.data.data !== undefined) {
+    payload = payload.data.data
+  } else if (payload && payload.code !== undefined && payload.data !== undefined) {
+    payload = payload.data
+  } else if (payload && payload.data && payload.data.status) {
+    payload = payload.data
+  }
+  return payload || {}
+}
+
 export default {
   name: 'BacktestCenter',
   components: { PortfolioResult, FactorResearchResult, FactorBenchmarkResult, StrategyEvolution },
@@ -1702,7 +1718,7 @@ export default {
       if (!this.activeJobId || !this.running) return
       try {
         const response = await getStrategyBacktestJob(this.activeJobId)
-        const job = response.data || {}
+        const job = normalizeBacktestJobPayload(response)
         this.runProgress = { ...(job.progress || {}) }
         if (job.status === 'succeeded') {
           const result = job.result || {}
@@ -1775,9 +1791,10 @@ export default {
           leverage: this.form.leverageEnabled ? this.form.leverage : 1,
           params: this.params
         })
-        this.activeJobId = response.data && response.data.jobId
-        this.runProgress = { ...((response.data && response.data.progress) || this.runProgress) }
-        const billing = response.data && response.data.billing
+        const jobReceipt = normalizeBacktestJobPayload(response)
+        this.activeJobId = jobReceipt.jobId || jobReceipt.job_id
+        this.runProgress = { ...(jobReceipt.progress || this.runProgress) }
+        const billing = jobReceipt.billing
         if (billing && typeof billing.remaining !== 'undefined') {
           this.$root.$emit('credits-updated', billing.remaining)
         }

@@ -1,3 +1,5 @@
+import arbitrageMessages from './arbitrage'
+import cryptoMarketMessages from './crypto-market'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import storage from 'store'
@@ -71,6 +73,8 @@ export const defaultLang = 'en-US'
 const messages = {
   [defaultLang]: {
     ...enUS,
+    ...arbitrageMessages[defaultLang],
+    ...(cryptoMarketMessages[defaultLang] || {}),
     ...(copilotOverrides[defaultLang] || {}),
     ...(profileSecurityMessages[defaultLang] || {}),
     ...(brokerAccountWorkspaceMessages[defaultLang] || {}),
@@ -198,6 +202,8 @@ function setI18nLanguage (lang) {
 
 function mergeLocaleOverrides (lang) {
   const overrides = {
+    ...(arbitrageMessages[lang] || arbitrageMessages[defaultLang]),
+    ...(cryptoMarketMessages[lang] || cryptoMarketMessages[defaultLang] || {}),
     ...(copilotOverrides[lang] || {}),
     ...(profileSecurityMessages[lang] || {}),
     ...(brokerAccountWorkspaceMessages[lang] || {}),
@@ -280,6 +286,7 @@ export async function loadLanguageAsync (lang = defaultLang) {
     const locale = sanitizeLocaleMessage({
       ...msg.default,
       ...(copilotOverrides[lang] || {}),
+      ...(cryptoMarketMessages[lang] || cryptoMarketMessages[defaultLang] || {}),
       ...(profileSecurityMessages[lang] || {}),
       ...(brokerAccountWorkspaceMessages[lang] || {}),
       ...(strategyV2Messages[lang] || {}),
